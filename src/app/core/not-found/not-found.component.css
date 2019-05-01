@@ -1,0 +1,30 @@
+.image{
+    height:400px; background-size:cover; width:auto;
+    background-image:url('../../../assets/images/404-error-page-templates.jpg');
+    background-position:50% 50%;
+    margin-bottom:20px 
+
+  }
+
+  /* button {
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+    position: absolute;
+    right: 0;
+    left: -26px;
+    margin: auto;
+    bottom: 76px;
+    width: 200px;
+    height: 49px;
+} */
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+button {
+    background-image: linear-gradient(to right, #314755 0%, #26a0da 51%, #314755 100%)
+  }

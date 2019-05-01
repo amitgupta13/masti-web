@@ -1,0 +1,13 @@
+<div class="topnav">
+    <span class="header-left">
+        <a [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" routerLink='/'>Portfolio</a>
+    </span>
+    <span class="header-right" *ngIf="!userIsAuthenticated">
+        <a routerLinkActive="active" routerLink='/signup'>Register</a>
+        <a routerLinkActive="active" routerLink='/signin'>Signin</a>
+    </span>
+    <span class="header-right" *ngIf="userIsAuthenticated">
+        <a routerLinkActive="active" (click)="logout()" style="cursor: pointer">Logout</a>
+        <a routerLinkActive="active" routerLink="/profile" style="cursor: pointer">Profile</a>
+    </span>    
+</div>
