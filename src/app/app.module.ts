@@ -7,6 +7,10 @@ import { CoreModule } from './core/core.module';
 import { AuthModule } from './auth/auth.module';
 import { HomeComponent } from './home/home.component';
 import { WildcardRoutingModule } from './wildcard-routing.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './auth/auth-interceptor';
 
 @NgModule({
   declarations: [
@@ -19,8 +23,12 @@ import { WildcardRoutingModule } from './wildcard-routing.module';
     AuthModule,
     AppRoutingModule,
     WildcardRoutingModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi:true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

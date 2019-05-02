@@ -4,6 +4,8 @@ import { Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { text } from '@angular/core/src/render3';
 
 const BACKEND_URL = environment.authApi;
 
@@ -12,47 +14,49 @@ export class AuthService {
     private isAuthenticated = false;
     private token: string;
     private tokenTimer: any;
-    private userId: string;
     private authStatusListener = new Subject<boolean>();
 
-    constructor(private http:HttpClient, private router: Router){}
+    constructor(private http:HttpClient, private router: Router, private toastr:ToastrService){}
 
     signup(signupData: SignupData){
-        this.http.post<{token:string, userId:string}>(`${BACKEND_URL}/signup`, signupData)
-            .subscribe((data)=>{
+        this.http.post(`${BACKEND_URL}/signup`, signupData, {responseType:'text'})
+            .subscribe((token)=>{
                 this.isAuthenticated = true;
-                this.token = data.token;
-                this.userId = data.userId;
+                this.token = token;
                 this.authStatusListener.next(true);
-                this.saveAuthData(this.token, this.userId);
+                this.saveAuthData(this.token);
                 this.router.navigate(['/']);
+                this.toastr.success('Signup Successful');
             }, error=>{
                 this.authStatusListener.next(false);
+                this.toastr.error(error.error);
             });
     }
 
     signin(signinData: LoginData){
-        this.http.post<{token:string, userId:string}>(`${BACKEND_URL}/signin`, signinData)
-            .subscribe((data)=>{
+        this.http.post(`${BACKEND_URL}/signin`, signinData, {responseType:'text'})
+            .subscribe((token)=>{
                 this.isAuthenticated = true;
-                this.token = data.token;
-                this.userId = data.userId;
+                this.token = token;
                 this.authStatusListener.next(true);
-                this.saveAuthData(this.token, this.userId);
+                this.saveAuthData(this.token);
                 this.router.navigate(['/']);
             }, error=>{
                 this.authStatusListener.next(false);
+                this.toastr.error(error.error);
             });
     }
 
-    private saveAuthData(token:string, userId:string){
+    private saveAuthData(token:string){
         localStorage.setItem('token', token);
-        localStorage.setItem('userId', userId);
+    }
+
+    getToken(){
+        return this.token;
     }
 
     private clearAuthdata(){
         localStorage.removeItem('token');
-        localStorage.removeItem('userId');
     }
 
     getAuthStatusListener(){
@@ -67,9 +71,9 @@ export class AuthService {
         this.token = null;
         this.isAuthenticated = false;
         this.authStatusListener.next(false);
-        this.userId = null;
         this.clearAuthdata();
         this.router.navigate(['/']);
+        this.toastr.success('Logged out successfully');
     }
 
 }
